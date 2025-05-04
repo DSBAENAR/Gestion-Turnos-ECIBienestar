@@ -1,6 +1,6 @@
 package com.shiftmanagement.app_core.model;
 
-public enum AppointmentStatus {
+public enum ShiftStatus {
     ASSIGNED,
     IN_PROGRESS,
     ATTENDED,

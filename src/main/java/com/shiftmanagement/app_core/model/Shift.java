@@ -13,15 +13,14 @@ public class Shift {
     private String userId;
     private String specialtyId;
 
-    private String turnCode;         // e.g., D-05
-    private boolean specialPriority; // true = pregnancy, disability
+    private String turnCode;         
+    private boolean specialPriority;
 
     private LocalDateTime createdAt;
-    private AppointmentStatus status;
+    private ShiftStatus status;
 
-    public Shift(String userId, String specialtyId) {
+    public Shift(String userId) {
         this.userId = userId;
-        this.specialtyId = specialtyId;
     }
 
     public String getId() {
@@ -60,10 +59,10 @@ public class Shift {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    public AppointmentStatus getStatus() {
+    public ShiftStatus getStatus() {
         return status;
     }
-    public void setStatus(AppointmentStatus status) {
+    public void setStatus(ShiftStatus status) {
         this.status = status;
     }
 
