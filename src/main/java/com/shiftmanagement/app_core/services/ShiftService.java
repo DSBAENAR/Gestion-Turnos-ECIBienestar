@@ -20,8 +20,8 @@ public class ShiftService {
     }
 
     public void generateShift(Shift shift){
-        String specialtyId = shift.getSpecialtyId();    // from input
-        String prefix = specialtyId;                    // assuming it's like "O", "P", etc.
+        String specialtyId = shift.getSpecialtyId();    
+        String prefix = specialtyId;                   
     
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();
@@ -32,7 +32,7 @@ public class ShiftService {
     
         long nextNumber = count + 1;
         shift.setTurnCode(prefix + "-" + nextNumber);
-        shift.setStatus(ShiftStatus.ASSIGNED);
+        shift.setStatus(ShiftStatus.IN_PROGRESS);
         shift.setCreatedAt(LocalDateTime.now());
     
         shiftRepository.insert(shift);
