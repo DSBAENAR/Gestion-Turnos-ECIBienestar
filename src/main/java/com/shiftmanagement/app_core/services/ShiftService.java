@@ -3,11 +3,15 @@ package com.shiftmanagement.app_core.services;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import com.shiftmanagement.app_core.model.Shift;
-import com.shiftmanagement.app_core.model.Speciality;
+import com.shiftmanagement.app_core.model.ShiftStatus;
 import com.shiftmanagement.app_core.repository.ShiftRepository;
 
+@Service
 public class ShiftService {
     private final ShiftRepository shiftRepository;
 
@@ -15,20 +19,28 @@ public class ShiftService {
         this.shiftRepository = shiftRepository;
     }
 
-    public String generateCode(Shift shift){
-        Speciality specialty = new Speciality();
-        String prefix = specialty.getCodePrefix(); // e.g., "O"
-        
+    public void generateShift(Shift shift){
+        String specialtyId = shift.getSpecialtyId();    // from input
+        String prefix = specialtyId;                    // assuming it's like "O", "P", etc.
+    
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
-
+    
         long count = shiftRepository.countBySpecialtyIdAndCreatedAtBetween(
-                specialty.getId(), startOfDay, endOfDay);
-
-        // 3. Create the new turn code: "O-16" if 15 already exist
+                specialtyId, startOfDay, endOfDay);
+    
         long nextNumber = count + 1;
-        return prefix + "-" + nextNumber;
+        shift.setTurnCode(prefix + "-" + nextNumber);
+        shift.setStatus(ShiftStatus.ASSIGNED);
+        shift.setCreatedAt(LocalDateTime.now());
+    
+        shiftRepository.insert(shift);
+    }
+    
+
+    public List<Shift> getShifts(){
+        return shiftRepository.findAll();
     }
     
 }
