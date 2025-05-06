@@ -19,6 +19,8 @@ public class Shift {
     private LocalDateTime createdAt;
     private ShiftStatus status;
 
+    private String role;
+
     public Shift(String userId) {
         this.userId = userId;
     }
@@ -67,5 +69,12 @@ public class Shift {
     }
 
     
+    public String getRole() {
+        return role;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
 
 }
