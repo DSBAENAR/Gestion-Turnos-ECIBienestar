@@ -60,6 +60,43 @@ public class ShiftService {
         }
     }
 
+
+    public Shift getShiftById(String id) {
+        Optional<Shift> shift = shiftRepository.findById(id);
+        if (shift.isPresent()) {
+            return shift.get(); 
+        } else {
+            throw new IllegalArgumentException("No shift found with ID: " + id);
+        }
+    }
+
+    public List<Shift> getShiftByUserId(String id){
+        return shiftRepository.findByUserId(id);
+    }
+
+
+    
+    public Shift getShiftByTurnCode(String code) {
+        Optional<Shift> shift = shiftRepository.findByTurnCode(code);
+        if (shift.isPresent()) {
+            return shift.get(); 
+        } else {
+            throw new IllegalArgumentException("No shift found with ID: " + code);
+        }
+    }
+
+   
+    public String deleteShiftByTurnCode(String turnCode) {
+        Optional<Shift> shift = shiftRepository.findByTurnCode(turnCode);
+        if (!shift.isPresent()) {  
+            throw new RuntimeException("No shift found with turnCode: " + turnCode);
+        }    
+        shiftRepository.delete(shift.get());
+        return turnCode;
+    }
+
+
+
     /**
      * This method searches for all shifts starting from a role
      * @param role: this role is defined in the Shift class
@@ -72,6 +109,17 @@ public class ShiftService {
         }
         return shifts;
     }
+
+
+
+
+
+
+
+    
+
+
+    
 }
 
 
