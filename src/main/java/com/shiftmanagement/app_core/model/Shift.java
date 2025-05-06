@@ -9,9 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Shift {
     @Id
     private String id;
-
     private String userId;
-    private String specialtyId;
+    private String username;
+    private String specialty;
 
     private String turnCode;         
     private boolean specialPriority;
@@ -19,7 +19,7 @@ public class Shift {
     private LocalDateTime createdAt;
     private ShiftStatus status;
 
-    private String role;
+    private String userRole;
 
     public Shift(String userId) {
         this.userId = userId;
@@ -37,11 +37,11 @@ public class Shift {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public String getSpecialtyId() {
-        return specialtyId;
+    public String getSpecialty() {
+        return specialty;
     }
-    public void setSpecialtyId(String specialtyId) {
-        this.specialtyId = specialtyId;
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
     }
     public String getTurnCode() {
         return turnCode;
@@ -68,13 +68,22 @@ public class Shift {
         this.status = status;
     }
 
-    
-    public String getRole() {
-        return role;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
     
-    public void setRole(String role) {
-        this.role = role;
-    }
 
 }

@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.shiftmanagement.app_core.model.Shift;
 
 public interface ShiftRepository extends MongoRepository<Shift,String> {
-    long countBySpecialtyIdAndCreatedAtBetween(String specialtyId, LocalDateTime startOfDay, LocalDateTime endOfDay);
+    long countBySpecialtyAndCreatedAtBetween(String specialty, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
     /** 
      * Taking into account the methods of MongoRepository, we can invoke the deletion of a shift by the ID
@@ -22,9 +22,14 @@ public interface ShiftRepository extends MongoRepository<Shift,String> {
      * @param role: this role is defined in the Shift class
      * @return a list of shifts that match the role
      */
-    List<Shift> findByRole(String role);
+    List<Shift> findByUserRole(String role);
 
-    List<Shift> findByUserId(String id);
-    
-    Optional<Shift> findByTurnCode(String turnCode);
+     /**
+     * This method searches for all shifts starting from a role
+     * @param role: this role is defined in the Shift class
+     * @return a list of shifts that match the role
+     */
+    List<Shift> findByUserId(String userId);
+
+    Optional<Shift> findByTurnCode(String code);
 }

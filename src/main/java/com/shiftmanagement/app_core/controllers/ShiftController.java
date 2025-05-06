@@ -1,16 +1,13 @@
 package com.shiftmanagement.app_core.controllers;
 
-import java.util.Collections;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shiftmanagement.app_core.model.Shift;
 import com.shiftmanagement.app_core.services.ShiftService;
 
+import java.util.Collections;
 import java.util.List;
-
-import javax.management.RuntimeErrorException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,48 +74,50 @@ public class ShiftController {
         }
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<?> getShiftById(@PathVariable String id){
-        try{
-            Shift shift = shiftService.getShiftById(id);
-            return ResponseEntity.status(200).body(shift);
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
-        }
-    }
+     public ResponseEntity<?> getShiftById(@PathVariable String id){
+         try{
+             Shift shift = shiftService.getShiftById(id);
+             return ResponseEntity.status(200).body(shift);
+         }
+         catch (RuntimeException e){
+             return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
+         }
+     }
+
     @GetMapping("/user/{id}")
-    public ResponseEntity<?> getShiftByUserId(@PathVariable String id){
-        try{
-            List<Shift> shift = shiftService.getShiftByUserId(id);
-            return ResponseEntity.status(200).body(shift);
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
-        }
-    }
-
-    
-    @DeleteMapping("/{code}")
-    public ResponseEntity<?> deleteTurnByCode(@PathVariable String code) {
+    public ResponseEntity<?> getShiftsByUserId(@PathVariable String id) {
         try {
-            String turnForDelete = shiftService.deleteShiftByTurnCode(code);
-            return ResponseEntity.status(200).body(Collections.singletonMap("response", "turn: " + turnForDelete + " Delete OK"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
+            List<Shift> shifts = shiftService.getShiftsByUserId(id);
+            if (shifts.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No shifts found for id: " + id);
+            }
+            return ResponseEntity.ok(shifts);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No shifts found for id: " + id);
         }
     }
 
-    @GetMapping("/turn/{code}")
-    public ResponseEntity<?> getShiftByTurnCode(@PathVariable String code){
-        try{
-            Shift shift = shiftService.getShiftByTurnCode(code);
-            return ResponseEntity.status(200).body(shift);
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
+    @DeleteMapping("/{code}")
+     public ResponseEntity<?> deleteTurnByCode(@PathVariable String code) {
+         try {
+             String turnForDelete = shiftService.deleteShiftByTurnCode(code);
+             return ResponseEntity.status(200).body(Collections.singletonMap("response", "turn: " + turnForDelete + " Delete OK"));
+        } catch (RuntimeException e) {
+             return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
         }
     }
-    
+
+     @GetMapping("/{code}")
+     public ResponseEntity<?> getShiftByTurnCode(@PathVariable String code){
+         try{
+             Shift shift = shiftService.getShiftByTurnCode(code);
+             return ResponseEntity.status(200).body(shift);
+        }
+         catch (RuntimeException e){
+             return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
+        }
+     }
 }
