@@ -8,7 +8,11 @@ import com.shiftmanagement.app_core.services.ShiftService;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,6 +35,41 @@ public class ShiftController {
     public void postShift(@RequestBody Shift shift) {
         shiftService.generateShift(shift);
     }
-    
-    
+
+    /**
+     * This endpoint deletes a shift identified by its unique ID. This method uses the ShiftService to perform the operation 
+     * and handles errors if the shift doesn't exist.
+     * @param id the unique identifier of the shift to delete; must not be null or empty.
+     * 
+     * We get responses of type 200 if the action was completed or 404 if it was not found.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteShift(@PathVariable String id) {
+        try {
+            shiftService.deleteShift(id);
+            return ResponseEntity.ok("Shift deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    /**
+     * This endpoint allows you to retrieve a list of shifts filtered by the role field. If no shifts are found with that role, 
+     * a 404 Not Found response is returned.
+     * @param role the role to filter shifts by; must not be null or empty.
+     */
+    @GetMapping("/role/{role}")
+    public ResponseEntity<?> getShiftsByRole(@PathVariable String role) {
+        try {
+            List<Shift> shifts = shiftService.getShiftsByRole(role);
+            if (shifts.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No shifts found for role: " + role);
+            }
+            return ResponseEntity.ok(shifts);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No shifts found for role: " + role);
+        }
+    }
 }
