@@ -136,30 +136,30 @@ public class ShiftService {
     }
 
     public Shift changeShiftStatus(Shift shift, ShiftStatus newStatus) {
-    if (newStatus == null) {
-        throw new IllegalArgumentException("The new status cannot be null");
+        if (newStatus == null) {
+            throw new IllegalArgumentException("The new status cannot be null");
+        }
+
+        ShiftStatus currentStatus = shift.getStatus();
+
+        if (!isValidTransition(currentStatus, newStatus)) {
+            throw new IllegalStateException("Transition not allowrd from " + currentStatus + " a " + newStatus);
+        }
+
+        shift.setStatus(newStatus);
+        shiftRepository.save(shift);
+        return shift;
     }
-
-    ShiftStatus currentStatus = shift.getStatus();
-
-    if (!isValidTransition(currentStatus, newStatus)) {
-        throw new IllegalStateException("Transition not allowrd from " + currentStatus + " a " + newStatus);
-    }
-
-    shift.setStatus(newStatus);
-    shiftRepository.save(shift);
-    return shift;
-}
 
 
     private boolean isValidTransition(ShiftStatus from, ShiftStatus to) {
-    return switch (from) {
-        case ASSIGNED -> to == ShiftStatus.IN_PROGRESS || to == ShiftStatus.CANCELED;
-        case IN_PROGRESS -> to == ShiftStatus.ATTENDED || to == ShiftStatus.CANCELED;
-        case ATTENDED, CANCELED -> false; 
-        default -> throw new IllegalArgumentException("Unexpected value: " + from);
-    };
-}
+        return switch (from) {
+            case ASSIGNED -> to == ShiftStatus.IN_PROGRESS || to == ShiftStatus.CANCELED;
+            case IN_PROGRESS -> to == ShiftStatus.ATTENDED || to == ShiftStatus.CANCELED;
+            case ATTENDED, CANCELED -> false; 
+            default -> throw new IllegalArgumentException("Unexpected value: " + from);
+        };
+    }
 
 }
 
