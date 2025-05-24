@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.shiftmanagement.app_core.model.JwtResponse;
+import com.shiftmanagement.app_core.model.User;
 
 @Service
 public class JwtWebClientService {
@@ -23,27 +24,31 @@ public class JwtWebClientService {
     @Value("${api.auth.url}")
     private String Url;
 
-    @Value("${api.auth.username}")
-    private String username;
-
-    @Value("${api.auth.password}")
-    private String password;
-
     public JwtWebClientService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public String getToken() {
+    public String getToken(String id) {
         if (cachedToken == null || Instant.now().isAfter(expiresAt)) {
-            refreshToken();
+            refreshToken(id);
         }
         return cachedToken;
     }
     
-    private void refreshToken() {
+    private void refreshToken(String id) {
+        
+        User user = webClient.get()
+        .uri(Url + "/user-service/users/" + id)
+        .retrieve()
+        .bodyToMono(User.class)
+        .block();
+
+    if (user == null || user.userName() == null || user.password() == null) {
+        throw new IllegalStateException("Credenciales incompletas para usuario " + id);
+    }
         Map<String, String> loginRequest = Map.of(
-            "userId", username,
-            "password", password
+            "userName", user.userName(),
+            "password", user.password()
         );
 
         JwtResponse response = webClient.post()

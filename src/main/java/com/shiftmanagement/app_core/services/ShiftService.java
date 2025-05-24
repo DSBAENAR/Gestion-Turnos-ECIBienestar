@@ -57,10 +57,12 @@ public class ShiftService {
         shift.setUsername(user.userName());
         shift.setUserRole(user.role());
         shiftRepository.insert(shift);
+        
     }
     
 
     public List<Shift> getShifts(){
+        userService.getUsers();
         return shiftRepository.findAll();
     }
 
@@ -143,7 +145,7 @@ public class ShiftService {
         ShiftStatus currentStatus = shift.getStatus();
 
         if (!isValidTransition(currentStatus, newStatus)) {
-            throw new IllegalStateException("Transition not allowrd from " + currentStatus + " a " + newStatus);
+            throw new IllegalStateException("Transition not allowed from " + currentStatus + " to " + newStatus);
         }
 
         shift.setStatus(newStatus);

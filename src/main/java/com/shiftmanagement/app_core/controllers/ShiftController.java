@@ -36,6 +36,7 @@ public class ShiftController {
 
     @GetMapping("")
     public List<Shift> getAllShifts() {
+        
         return shiftService.getShifts();
     }
 
