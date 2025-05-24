@@ -22,7 +22,6 @@ public class ShiftService {
     }
 
     public void generateShift(Shift shift){
-        user = new User("Salomon", 21, "123456789", "Estudiante");
         String specialty = shift.getSpecialty();
         Prefix prefix;
         switch (specialty) {
