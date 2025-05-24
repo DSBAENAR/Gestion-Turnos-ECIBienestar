@@ -4,24 +4,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shiftmanagement.app_core.model.Shift;
+import com.shiftmanagement.app_core.model.ShiftStatus;
 import com.shiftmanagement.app_core.services.ShiftService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
 @RequestMapping("/api/shifts")
-@CrossOrigin("http://localhost:3000")
+@Tag(name = "Turnos", description = "Operaciones sobre Turnos")
 public class ShiftController {
     private final ShiftService shiftService;
     
@@ -50,7 +55,7 @@ public class ShiftController {
     public ResponseEntity<String> deleteShift(@PathVariable String id) {
         try {
             shiftService.deleteShift(id);
-            return ResponseEntity.ok("Shift deleted successfully.");
+            return ResponseEntity.ok("Shift " + id + " deleted successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -102,7 +107,7 @@ public class ShiftController {
         }
     }
 
-    @DeleteMapping("/{code}")
+    @DeleteMapping("turnCode/{code}")
      public ResponseEntity<?> deleteTurnByCode(@PathVariable String code) {
          try {
              String turnForDelete = shiftService.deleteShiftByTurnCode(code);
@@ -112,10 +117,22 @@ public class ShiftController {
         }
     }
 
-     @GetMapping("/{code}")
+    @GetMapping("/shift/{code}")
      public ResponseEntity<?> getShiftByTurnCode(@PathVariable String code){
          try{
              Shift shift = shiftService.getShiftByTurnCode(code);
+             return ResponseEntity.status(200).body(shift);
+        }
+         catch (RuntimeException e){
+             return ResponseEntity.status(500).body(Collections.singletonMap("error", e.getMessage()));
+        }
+     }
+
+    @PutMapping("/{turnCode}")
+     public ResponseEntity<?> putMethodName(@PathVariable String turnCode, @RequestBody ShiftStatus status) {
+        try{
+             Shift shift = shiftService.getShiftByTurnCode(turnCode);
+             shiftService.changeShiftStatus(shift, status);
              return ResponseEntity.status(200).body(shift);
         }
          catch (RuntimeException e){

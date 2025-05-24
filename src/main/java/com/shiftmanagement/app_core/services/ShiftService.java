@@ -16,13 +16,19 @@ import com.shiftmanagement.app_core.repository.ShiftRepository;
 @Service
 public class ShiftService {
     private final ShiftRepository shiftRepository;
-    private User user;
-    public ShiftService(ShiftRepository shiftRepository) {
+    private final UserService userService;
+    LocalDate today = LocalDate.now();
+    LocalDateTime startOfDay = today.atStartOfDay();
+    LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+    public ShiftService(ShiftRepository shiftRepository, UserService userService) {
         this.shiftRepository = shiftRepository;
+        this.userService = userService;
+        
     }
 
     public void generateShift(Shift shift){
         String specialty = shift.getSpecialty();
+        User user = userService.getUserbyId(shift.getUserId());
         Prefix prefix;
         switch (specialty) {
             case "Psicologia":
@@ -48,7 +54,7 @@ public class ShiftService {
         shift.setStatus(ShiftStatus.ASSIGNED);
         shift.setCreatedAt(LocalDateTime.now());
         shift.setUserId(user.id());
-        shift.setUsername(user.name());
+        shift.setUsername(user.userName());
         shift.setUserRole(user.role());
         shiftRepository.insert(shift);
     }
@@ -102,7 +108,8 @@ public class ShiftService {
     }
 
     public Shift getShiftByTurnCode(String code) {
-        Optional<Shift> shift = shiftRepository.findByTurnCode(code);
+        
+        Optional<Shift> shift = shiftRepository.findByTurnCodeAndCreatedAtBetween(code,startOfDay,endOfDay);
         if (shift.isPresent()) {
             return shift.get(); 
         } else {
@@ -111,7 +118,7 @@ public class ShiftService {
     }
 
     public String deleteShiftByTurnCode(String turnCode) {
-        Optional<Shift> shift = shiftRepository.findByTurnCode(turnCode);
+        Optional<Shift> shift = shiftRepository.findByTurnCodeAndCreatedAtBetween(turnCode,startOfDay,endOfDay);
         if (!shift.isPresent()) {  
             throw new RuntimeException("No shift found with turnCode: " + turnCode);
         }    
@@ -127,6 +134,33 @@ public class ShiftService {
             throw new IllegalArgumentException("No shift found with ID: " + id);
         }
     }
+
+    public Shift changeShiftStatus(Shift shift, ShiftStatus newStatus) {
+    if (newStatus == null) {
+        throw new IllegalArgumentException("The new status cannot be null");
+    }
+
+    ShiftStatus currentStatus = shift.getStatus();
+
+    if (!isValidTransition(currentStatus, newStatus)) {
+        throw new IllegalStateException("Transition not allowrd from " + currentStatus + " a " + newStatus);
+    }
+
+    shift.setStatus(newStatus);
+    shiftRepository.save(shift);
+    return shift;
+}
+
+
+    private boolean isValidTransition(ShiftStatus from, ShiftStatus to) {
+    return switch (from) {
+        case ASSIGNED -> to == ShiftStatus.IN_PROGRESS || to == ShiftStatus.CANCELED;
+        case IN_PROGRESS -> to == ShiftStatus.ATTENDED || to == ShiftStatus.CANCELED;
+        case ATTENDED, CANCELED -> false; 
+        default -> throw new IllegalArgumentException("Unexpected value: " + from);
+    };
+}
+
 }
 
 

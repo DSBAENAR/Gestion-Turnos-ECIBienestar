@@ -31,5 +31,5 @@ public interface ShiftRepository extends MongoRepository<Shift,String> {
      */
     List<Shift> findByUserId(String userId);
 
-    Optional<Shift> findByTurnCode(String code);
+    Optional<Shift> findByTurnCodeAndCreatedAtBetween(String code, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }
