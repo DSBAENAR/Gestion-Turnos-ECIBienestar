@@ -26,7 +26,7 @@ public class WebConfig {
         config.setAllowCredentials(true);
         config.setAllowedOrigins(Arrays.asList(
             "https://shiftmanager-hrbgeaamdmg6ehb5.canadacentral-01.azurewebsites.net",
-            "http://localhost:3000",
+            "http://localhost:5173",
             "https://lively-rock-090f99110.6.azurestaticapps.net"
         ));
         config.addAllowedHeader("*");
