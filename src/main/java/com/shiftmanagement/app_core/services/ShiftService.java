@@ -48,7 +48,7 @@ public class ShiftService {
                     shift.setTurnCode(prefix + "-" + nextNumber);
                     shift.setStatus(ShiftStatus.ASSIGNED);
                     shift.setCreatedAt(LocalDateTime.now());
-                    shift.setUserId(user.id());
+                    shift.setUserId(user.numberId());
                     shift.setUsername(user.userName());
                     shift.setUserRole(user.role());
                     return shift;

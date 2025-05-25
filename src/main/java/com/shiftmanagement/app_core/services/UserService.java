@@ -40,7 +40,7 @@ public class UserService {
     public Mono<User> getUserbyId(String id) {
         return jwtWebClientService.getToken(id)
             .flatMap(token -> webClient.get()
-                .uri(uri + "/user-service/users/" + id)
+                .uri(uri + "/user-service/users/by-number-id/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .retrieve()
                 .bodyToMono(byte[].class)  // Leemos como bytes
