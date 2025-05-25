@@ -54,7 +54,7 @@ public class JwtWebClientService {
      */
     private Mono<String> refreshToken(String id) {
         return webClient.get()
-        .uri(Url + "/user-service/users/" + id)
+        .uri(Url + "/user-service/users/by-number-id/" + id)
         .retrieve()
         .bodyToMono(User.class)
         .flatMap(user -> {
