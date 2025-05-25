@@ -21,9 +21,10 @@ public class Shift {
 
     private String userRole;
 
-    public Shift(String userId, String specialty) {
+    public Shift(String userId, String specialty, boolean specialPriority) {
         this.userId = userId;
         this.specialty = specialty;
+        this.specialPriority = specialPriority;
     }
 
     public String getId() {

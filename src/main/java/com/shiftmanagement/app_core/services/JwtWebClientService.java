@@ -10,7 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.shiftmanagement.app_core.model.JwtResponse;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shiftmanagement.app_core.model.User;
 
 import reactor.core.publisher.Mono;
@@ -57,15 +58,25 @@ private Mono<String> refreshToken(String id) {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .bodyValue(loginRequest)
                 .retrieve()
-                .bodyToMono(JwtResponse.class)
-                .flatMap(jwt -> {
-                    if (jwt.getToken() == null) {
-                        return Mono.error(new IllegalStateException("El token JWT es null"));
+                .bodyToMono(String.class) 
+                .doOnNext(body -> System.out.println("Respuesta cruda del login: " + body))
+                .flatMap(body -> {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonNode rootNode = mapper.readTree(body);
+                    String token = rootNode.path("token").asText();
+                    
+                    if (token == null || token.isEmpty()) {
+                        return Mono.error(new IllegalStateException("Token es null o vacío"));
                     }
-                    this.cachedToken = jwt.getToken();
+                    
+                    this.cachedToken = token;
                     this.expiresAt = Instant.now().plus(Duration.ofMinutes(55));
-                    return Mono.just(jwt.getToken());
-                });
+                    return Mono.just(token);
+                } catch (Exception e) {
+                    return Mono.error(e);
+                }
+            });
         });
     }
 }

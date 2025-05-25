@@ -1,24 +1,53 @@
 package com.shiftmanagement.app_core.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)  // <- Esto es clave si no usas todos los campos
 public class JwtResponse {
+    @JsonProperty("authenticated")
     private boolean authenticated;
+    
+    @JsonProperty("user")
     private User user;
+    
+    @JsonProperty("token")
     private String token;
+    
+    @JsonProperty("message")
     private String message;
 
-    public boolean isAuthenticated() { return authenticated; }
-    public void setAuthenticated(boolean authenticated) { this.authenticated = authenticated; }
+    // Constructor vacío (necesario para Jackson)
+    public JwtResponse() {}
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    // Getters y Setters
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
+    }
 
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
-
