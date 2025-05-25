@@ -2,28 +2,33 @@ package com.shiftmanagement.app_core.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 
-
-
+/**
+ * Configuration class for reactive Spring Security in a WebFlux application.
+ * This setup disables CSRF protection and allows unrestricted access to all endpoints,
+ * including Swagger documentation paths.
+ */
 @Configuration
 public class SecurityConfig {
-    
+
+    /**
+     * Configures the security filter chain for the application.
+     * - Disables CSRF protection.
+     * - Permits all requests, including Swagger UI and OpenAPI endpoints.
+     *
+     * @param http the {@link ServerHttpSecurity} object used to configure security
+     * @return a {@link SecurityWebFilterChain} instance with the configured security rules
+     */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(Customizer.withDefaults()) // Habilita CORS con la config definida abajo
-            .csrf(csrf -> csrf.disable()) // Desactiva CSRF si estás usando API REST
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll() // Permite todas las rutas
-            );
-        return http.build();
-    }    
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .authorizeExchange(exchange -> exchange
+                .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyExchange().permitAll()
+            )
+            .build();
+    }
 }
-
-
-
-

@@ -1,35 +1,44 @@
 package com.shiftmanagement.app_core.repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+
+
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import com.shiftmanagement.app_core.model.Shift;
+import com.shiftmanagement.app_core.model.ShiftStatus;
 
-public interface ShiftRepository extends MongoRepository<Shift,String> {
-    long countBySpecialtyAndCreatedAtBetween(String specialty, LocalDateTime startOfDay, LocalDateTime endOfDay);
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+public interface ShiftRepository extends ReactiveMongoRepository<Shift,String> {
+    Mono<Long> countBySpecialtyAndCreatedAtBetween(String specialty, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
     /** 
      * Taking into account the methods of MongoRepository, we can invoke the deletion of a shift by the ID
      * @param id: the ID of the shift to delete.
+     * @return 
      */
-    void deleteById(String id);
+    Mono<Void> deleteById(String id);
     
     /**
      * This method searches for all shifts starting from a role
      * @param role: this role is defined in the Shift class
      * @return a list of shifts that match the role
      */
-    List<Shift> findByUserRole(String role);
+    Flux<Shift> findByUserRole(String role);
 
      /**
      * This method searches for all shifts starting from a role
      * @param role: this role is defined in the Shift class
      * @return a list of shifts that match the role
      */
-    List<Shift> findByUserId(String userId);
+    Flux<Shift> findByUserId(String userId);
 
-    Optional<Shift> findByTurnCode(String code);
+    Mono<Shift> findByTurnCodeAndCreatedAtBetween(String code, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    Flux<Shift> findBySpecialtyAndCreatedAtBetween(String specialPriority, LocalDateTime startOfDay, LocalDateTime endOfDay);
+    Flux<Shift> findByStatusAndCreatedAtBetween(ShiftStatus status, LocalDateTime startOfDay, LocalDateTime endOfDay);
+    Flux<Shift> findBySpecialPriorityAndCreatedAtBetween(boolean specialPriority, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }
