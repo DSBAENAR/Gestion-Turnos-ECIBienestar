@@ -5,20 +5,28 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Document(collection = "Shifts")
 public class Shift {
     @Id
+    @Schema(hidden = true)
     private String id;
     private String userId;
     private String username;
     private String specialty;
 
-    private String turnCode;         
+    @Schema(hidden = true)
+    private String turnCode;
+    @Schema(hidden = true)      
     private boolean specialPriority;
 
+    @Schema(hidden = true)
     private LocalDateTime createdAt;
+    @Schema(hidden = true)
     private ShiftStatus status;
 
+    @Schema(hidden = true)
     private String userRole;
 
     public Shift(String userId, String specialty, boolean specialPriority) {
@@ -26,6 +34,7 @@ public class Shift {
         this.specialty = specialty;
         this.specialPriority = specialPriority;
     }
+
 
     public String getId() {
         return id;
