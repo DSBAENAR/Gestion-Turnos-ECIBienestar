@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import com.shiftmanagement.app_core.model.Shift;
+import com.shiftmanagement.app_core.model.ShiftStatus;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,4 +37,8 @@ public interface ShiftRepository extends ReactiveMongoRepository<Shift,String> {
     Flux<Shift> findByUserId(String userId);
 
     Mono<Shift> findByTurnCodeAndCreatedAtBetween(String code, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    Flux<Shift> findBySpecialtyAndCreatedAtBetween(String specialPriority, LocalDateTime startOfDay, LocalDateTime endOfDay);
+    Flux<Shift> findByStatusAndCreatedAtBetween(ShiftStatus status, LocalDateTime startOfDay, LocalDateTime endOfDay);
+    Flux<Shift> findBySpecialPriorityAndCreatedAtBetween(boolean specialPriority, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }

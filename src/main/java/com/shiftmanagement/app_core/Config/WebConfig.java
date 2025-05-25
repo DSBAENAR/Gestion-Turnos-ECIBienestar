@@ -9,9 +9,17 @@ import org.springframework.web.cors.reactive.CorsWebFilter;
 
 import java.util.Arrays;
 
+/**
+ * Configuration class for enabling and customizing CORS (Cross-Origin Resource Sharing) in a reactive Spring WebFlux application.
+ */
 @Configuration
 public class WebConfig {
 
+    /**
+     * Defines the CORS configuration source, specifying allowed origins, headers, and methods.
+     *
+     * @return a {@link CorsConfigurationSource} with the configured CORS rules
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -29,6 +37,12 @@ public class WebConfig {
         return source;
     }
 
+    /**
+     * Registers the {@link CorsWebFilter} that applies the configured CORS rules to all incoming HTTP requests.
+     *
+     * @param corsConfigurationSource the CORS configuration source bean
+     * @return a {@link CorsWebFilter} instance
+     */
     @Bean
     public CorsWebFilter corsWebFilter(CorsConfigurationSource corsConfigurationSource) {
         return new CorsWebFilter(corsConfigurationSource);

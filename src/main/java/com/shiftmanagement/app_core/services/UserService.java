@@ -30,6 +30,13 @@ public class UserService {
     this.jwtWebClientService = jwtWebClientService;
    }
 
+   /**
+     * Retrieves a user by their unique identifier.
+     * Makes an authenticated request to an external user service and parses the JSON response manually.
+     *
+     * @param id the user ID to look up
+     * @return a Mono emitting the User object
+     */
     public Mono<User> getUserbyId(String id) {
         return jwtWebClientService.getToken(id)
             .flatMap(token -> webClient.get()
@@ -49,16 +56,22 @@ public class UserService {
                 }));
     }
 
-
+    /**
+     * Retrieves all users from the external user service.
+     * Requires a valid token obtained using the requester's ID.
+     *
+     * @param requesterId the ID of the user making the request, used to fetch the JWT token
+     * @return a Flux emitting User objects
+     */
     public Flux<User> getUsers(String requesterId) {
-    Mono<String> token = jwtWebClientService.getToken(requesterId);
+        Mono<String> token = jwtWebClientService.getToken(requesterId);
 
-    return webClient.get()
-        .uri(uri + "/user-service/users")
-        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-        .retrieve()
-        .bodyToFlux(User.class);  
-}
+        return webClient.get()
+            .uri(uri + "/user-service/users")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .retrieve()
+            .bodyToFlux(User.class);  
+        }
 
    
 }

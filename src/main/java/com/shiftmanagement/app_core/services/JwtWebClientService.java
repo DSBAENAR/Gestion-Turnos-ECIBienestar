@@ -31,15 +31,29 @@ public class JwtWebClientService {
         this.webClient = webClient;
     }
 
+    /**
+     * Retrieves a valid JWT token for the specified user.
+     * If a token is cached and not expired, it returns it; otherwise, it fetches a new one.
+     *
+     * @param id the user ID for which the token is required
+     * @return a Mono emitting the JWT token as a String
+     */
     public Mono<String> getToken(String id) {
-    if (cachedToken == null || Instant.now().isAfter(expiresAt)) {
-        return refreshToken(id);
-    }
-    return Mono.just(cachedToken);
-}
+        if (cachedToken == null || Instant.now().isAfter(expiresAt)) {
+            return refreshToken(id);
+        }
+        return Mono.just(cachedToken);
+        }
 
-private Mono<String> refreshToken(String id) {
-    return webClient.get()
+    /**
+     * Calls the external user service to fetch user credentials and then requests a new JWT token.
+     * Caches the token and sets its expiration time for future use.
+     *
+     * @param id the user ID for which to refresh the token
+     * @return a Mono emitting the new JWT token
+     */
+    private Mono<String> refreshToken(String id) {
+        return webClient.get()
         .uri(Url + "/user-service/users/" + id)
         .retrieve()
         .bodyToMono(User.class)
