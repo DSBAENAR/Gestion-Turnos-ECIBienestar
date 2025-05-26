@@ -73,5 +73,10 @@ public class UserService {
             .bodyToFlux(User.class);  
         }
 
+    public String getUri() {
+        return uri;
+    }
+    
+
    
 }

@@ -93,5 +93,23 @@ public class JwtWebClientService {
             });
         });
     }
+
+    public WebClient getWebClient() {
+        return webClient;
+    }
+
+    public String getCachedToken() {
+        return cachedToken;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public String getUrl() {
+        return Url;
+    }
+
+    
 }
 

@@ -36,6 +36,10 @@ public class Shift {
     }
 
 
+    public Shift() {
+    }
+
+
     public String getId() {
         return id;
     }
