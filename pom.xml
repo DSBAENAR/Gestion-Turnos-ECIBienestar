@@ -131,7 +131,7 @@
 						<limit>
 							<counter>INSTRUCTION</counter>
 							<value>COVEREDRATIO</value>
-							<minimum>0.50</minimum> <!-- 80% mínimo -->
+							<minimum>0.80</minimum> <!-- 80% mínimo -->
 						</limit>
 						</limits>
 					</rule>
@@ -141,6 +141,11 @@
 			</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.11.0.3922</version>
+    		</plugin>
 		</plugins>
 	</build>
 
