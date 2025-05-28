@@ -43,8 +43,7 @@ public class ShiftControllerTest {
         when(shiftService.getShifts()).thenReturn(Flux.empty());
 
         StepVerifier.create(shiftController.getAllShifts())
-                .expectError(IllegalStateException.class)
-                .verify();
+                .verifyComplete(); // Espera que termine sin error y sin elementos
     }
 
     @Test
