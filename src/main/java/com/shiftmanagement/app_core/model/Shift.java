@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+
 @Document(collection = "Shifts")
 public class Shift {
     @Id
