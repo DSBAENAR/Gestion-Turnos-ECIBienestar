@@ -63,7 +63,7 @@ public class ShiftService {
      * @return a Flux of all Shift objects
      */
     public Flux<Shift> getShifts() {
-        return shiftRepository.findAll();
+        return shiftRepository.findAll().switchIfEmpty(Flux.error(new IllegalStateException("No shifts found")));
     }
 
      /**

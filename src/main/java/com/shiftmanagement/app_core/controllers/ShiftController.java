@@ -36,8 +36,7 @@ public class ShiftController {
      */
     @GetMapping("")
     public Flux<Shift> getAllShifts() {
-        return shiftService.getShifts()
-        .switchIfEmpty(Flux.error(new IllegalStateException("No shifts found")));
+        return shiftService.getShifts();
     }
 
     /**
