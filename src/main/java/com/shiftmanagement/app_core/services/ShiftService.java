@@ -33,7 +33,7 @@ public class ShiftService {
      * @param shift the shift object to be created
      * @return a Mono that completes when the shift is saved
      */
-    public Mono<Void> generateShift(Shift shift) {
+    public Mono<Shift> generateShift(Shift shift) {
         String specialty = shift.getSpecialty();
         Prefix prefix = switch (specialty) {
             case "Psicologia" -> Prefix.PS;
@@ -53,8 +53,7 @@ public class ShiftService {
                     shift.setUserRole(user.role());
                     return shift;
                 }))
-            .flatMap(shiftRepository::insert)
-            .then(); 
+            .flatMap(shiftRepository::insert);
     }
 
     /**
