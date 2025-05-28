@@ -49,12 +49,12 @@ public class ShiftControllerTest {
     @Test
     void testPostShift_Success() {
         Shift shift = new Shift();
-        when(shiftService.generateShift(shift)).thenReturn(Mono.empty());
+        when(shiftService.generateShift(shift)).thenReturn(Mono.just(shift));
 
         StepVerifier.create(shiftController.postShift(shift))
                 .assertNext(response -> {
                     assertEquals(201, response.getStatusCodeValue());
-                    assertEquals("Turno generado correctamente", response.getBody());
+                    assertEquals(shift, response.getBody());
                 })
                 .verifyComplete();
     }
@@ -67,7 +67,7 @@ public class ShiftControllerTest {
         StepVerifier.create(shiftController.postShift(shift))
                 .assertNext(response -> {
                     assertEquals(500, response.getStatusCodeValue());
-                    assertEquals("Error", response.getBody());
+                    assertNull(response.getBody());
                 })
                 .verifyComplete();
     }
