@@ -134,17 +134,13 @@ class ShiftServiceTest {
         Shift shift = new Shift("123", "Psicologia", false);
         User mockUser = new User("John Doe", "123", "DOCTOR", null);
 
-        Mockito.when(userService.getUserbyId("123"))
-            .thenReturn(Mono.just(mockUser));
-
-        Mockito.when(shiftRepository.countBySpecialtyAndCreatedAtBetween(any(), any(), any()))
-            .thenReturn(Mono.just(5L));
-
-        Mockito.when(shiftRepository.insert(Mockito.<Shift>any()))
-            .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+        when(userService.getUserbyId(anyString())).thenReturn(Mono.just(mockUser));
+        when(shiftRepository.countBySpecialtyAndCreatedAtBetween(anyString(), any(), any())).thenReturn(Mono.just(0L));
+        when(shiftRepository.insert(any(Shift.class))).thenReturn(Mono.just(shift));
 
         // Act
         StepVerifier.create(shiftService.generateShift(shift))
+            .expectNext(shift)
             .verifyComplete();
 
         // Assert: capturar el Shift que fue insertado
