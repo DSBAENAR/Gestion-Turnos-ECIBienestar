@@ -63,7 +63,7 @@ public class JwtWebClientService {
             }
 
             Map<String, String> loginRequest = Map.of(
-                "userId", user.userName(),
+                "userName", user.userName(),
                 "password", user.password()
             );
 
@@ -79,7 +79,6 @@ public class JwtWebClientService {
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode rootNode = mapper.readTree(body);
                     String token = rootNode.path("token").asText();
-                    
                     if (token == null || token.isEmpty()) {
                         return Mono.error(new IllegalStateException("Token es null o vacío"));
                     }
