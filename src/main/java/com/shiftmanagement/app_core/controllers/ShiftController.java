@@ -46,10 +46,10 @@ public class ShiftController {
      * @return a response with HTTP 201 on success, or 500 on error
      */
     @PostMapping("")
-    public Mono<ResponseEntity<String>> postShift(@RequestBody Shift shift) {
+    public Mono<ResponseEntity<Shift>> postShift(@RequestBody Shift shift) {
         return shiftService.generateShift(shift)
-            .thenReturn(ResponseEntity.status(HttpStatus.CREATED).body("Turno generado correctamente"))
-            .onErrorResume(e -> Mono.just(ResponseEntity.status(500).body(e.getMessage())));
+            .map(savedShift -> ResponseEntity.status(HttpStatus.CREATED).body(savedShift))
+            .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()));
     }
 
     /**
