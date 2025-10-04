@@ -59,6 +59,44 @@ src/
 - `DELETE /api/shifts/{id}` — Elimina un turno por ID
 - `GET /api/shifts/role/{role}` — Turnos por rol de usuario
 - `GET /api/shifts/user/{id}` — Turnos asignados a un usuario
+  
+## Ejemplos de uso de la API con curl
+
+### Obtener todos los turnos
+
+```bash
+curl -X GET "https://shiftmanager-hrbgeaamdmg6ehb5.canadacentral-01.azurewebsites.net/api/shifts"
+```
+
+### Crear un nuevo turno
+
+```bash
+curl -X POST "https://shiftmanager-hrbgeaamdmg6ehb5.canadacentral-01.azurewebsites.net/api/shifts" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "123456",
+    "specialty": "Psicologia",
+    "specialPriority": false
+  }'
+```
+
+### Eliminar un turno por ID
+
+```bash
+curl -X DELETE "https://shiftmanager-hrbgeaamdmg6ehb5.canadacentral-01.azurewebsites.net/api/shifts/{id}"
+```
+
+### Obtener turnos por rol
+
+```bash
+curl -X GET "https://shiftmanager-hrbgeaamdmg6ehb5.canadacentral-01.azurewebsites.net/api/shifts/role/ADMIN"
+```
+
+### Obtener turnos por usuario
+
+```bash
+curl -X GET "https://shiftmanager-hrbgeaamdmg6ehb5.canadacentral-01.azurewebsites.net/api/shifts/user/123456"
+```
 
 ## Seguridad y CORS
 
